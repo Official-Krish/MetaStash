@@ -6,6 +6,7 @@ import { Copy } from "lucide-react";
 import { Solana } from "./components/solana";
 import { Etherium } from "./components/Etherium";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import Appbar from "./components/Appbar";
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
   return (
     <div className="min-h-screen bg-black text-white p-6">
       <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-2xl font-bold mb-4">Web3 Wallet</h1>
+        <Appbar />
 
         {/* Secret Phrase Section */}
         <Card className="bg-[#121212] border-gray-800">

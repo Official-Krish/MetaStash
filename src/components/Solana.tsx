@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Send } from "lucide-react";
 import { derivePath } from "ed25519-hd-key";
 import nacl from "tweetnacl";
 import { Keypair } from "@solana/web3.js";
@@ -10,12 +10,15 @@ import { Button } from "./ui/button";
 import { cn } from "../lib/utils";
 import { useState } from "react";
 import { SOL } from "../config";
+import SendModal from "./sendModal";
 
 export function Solana({ mnemonic }: { mnemonic: string }) {
     const [showPrivateKeys, setShowPrivateKeys] = useState<Record<number, boolean>>({});
     const [wallets, setWallets] = useState<
         { publicKey: string; privateKey: string; balance: number }[]
     >([]);
+    const [sendModalOpen, setIsSendModalOpen] = useState(false);
+
     const getSolBalance = async (solAddress: string) => {
         try {
           const res = await axios.post(
@@ -136,11 +139,22 @@ export function Solana({ mnemonic }: { mnemonic: string }) {
                           </Button>
                         </div>
                       </div>
+                      <div className="space-y-2">
+                        <div className="text-sm text-gray-400">Balance</div>
+                        <div className="font-mono text-xl text-white">{wallet.balance} ETH</div>
+                      </div>
+                      <Button 
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        onClick={() => setIsSendModalOpen(true)}
+                      >
+                        <Send className="mr-2 h-4 w-4" /> Send
+                      </Button>
                     </CardContent>
                   </Card>
                 ))}
               </CardContent>
             </Card>
+            <SendModal isOpen={sendModalOpen} onClose={() => setIsSendModalOpen(false)} Chain="SOL" />
           </div>
       );
 }
