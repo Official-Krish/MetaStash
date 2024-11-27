@@ -4,12 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Button } from "./components/ui/button";
 import { Copy } from "lucide-react";
 import { Solana } from "./components/solana";
+import { Etherium } from "./components/Etherium";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 
 
 function App() {
   const [mnemonic, setMnemonic] = useState("");
   const [secretPhrase, setSecretPhrase] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState<"SOLANA" | "ETHEREUM">("SOLANA")
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -22,7 +25,6 @@ function App() {
     setMnemonic(mnemonic);
     setSecretPhrase(mnemonic.split(" "));
   };
-
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
@@ -62,8 +64,32 @@ function App() {
             </div>
           </CardContent>
         </Card>
-        {mnemonic.length !== 0 && <Solana mnemonic={mnemonic} />}
-        {mnemonic.length === 0 && <div className="text-red-600">Please generate a mnemonic first!</div>}
+        {mnemonic &&
+          <div>
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "SOLANA" | "ETHEREUM")}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="SOLANA">Solana</TabsTrigger>
+                <TabsTrigger value="ETHEREUM">Ethereum</TabsTrigger>
+              </TabsList>
+              <TabsContent value="SOLANA">
+                {mnemonic ? (
+                  <Solana mnemonic={mnemonic} />
+                ) : (
+                  <div className="text-red-600 p-4">Please generate a mnemonic first!</div>
+                )}
+              </TabsContent>
+              <TabsContent value="ETHEREUM">
+                {mnemonic ? (
+                  <Etherium mnemonic={mnemonic} />
+                ) : (
+                  <div className="text-red-600 p-4">Please generate a mnemonic first!</div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </div>
+        }
+
+        {!mnemonic && <div className="text-red-600 p-4">Please generate a mnemonic first!</div>}
       </div>
     </div>
   );
